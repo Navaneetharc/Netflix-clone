@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import './Login.css';
 import logo from '../../assets/logo.png';
-import netflix_spinner from '../../assets/netflix_spinner.gif';
 import { useAuth } from "../../context/AuthContext";
 
 
@@ -12,7 +11,13 @@ const Login: React.FC = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
-    const {loginUser,signupUser,loading} = useAuth();
+    const resetForm = () => {
+        setName("");
+        setEmail("");
+        setPassword("");
+    };
+
+    const {loginUser,signupUser} = useAuth();
 
     const user_auth = async(event: React.FormEvent<HTMLFormElement>):Promise<void> => {
         event.preventDefault();
@@ -23,14 +28,6 @@ const Login: React.FC = () => {
             await signupUser(name,email,password);
         }
     };
-
-    if(loading){
-        return(
-            <div className="login-spinner">
-                <img src={netflix_spinner} alt="loading" />
-            </div>
-        );
-    }
 
     return(
         <div className="login">
@@ -51,8 +48,8 @@ const Login: React.FC = () => {
                     </div>
                 </form>
                 <div className="form-switch">
-                    {signState === "Sign In"?(<p>New to Netflix? <span onClick={() => setSignState("Sign Up")}>Sign Up Now</span></p>
-                    ):(<p>Already have an account? <span onClick={() => setSignState("Sign In")}>Sign In Now</span></p>
+                    {signState === "Sign In"?(<p>New to Netflix? <span onClick={() => {setSignState("Sign Up"); resetForm();}}>Sign Up Now</span></p>
+                    ):(<p>Already have an account? <span onClick={() => {setSignState("Sign In"); resetForm();}}>Sign In Now</span></p>
                     )}                                        
                 </div>
             </div>

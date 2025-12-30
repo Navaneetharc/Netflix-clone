@@ -6,11 +6,20 @@ import bell_icon from '../../assets/bell_icon.svg'
 import profile_img from '../../assets/profile_img.png'
 import caret_icon from '../../assets/caret_icon.svg'
 import { logout } from "../../firbase";
+import { useNavigate } from "react-router-dom";
 
 
 const Navbar: React.FC = () => {
 
     const navRef = useRef<HTMLDivElement | null>(null);
+    const navigate = useNavigate();
+
+    const goToList = () => {
+        navigate('/my-list');
+    }
+    const goToHome = () => {
+        navigate('/');
+    }
 
     useEffect(() => {
         window.addEventListener('scroll',() => {
@@ -27,11 +36,11 @@ const Navbar: React.FC = () => {
             <div className="navbar-left">
                 <img src={logo} alt="" />
                 <ul>
-                    <li>Home</li>
+                    <li onClick={goToHome}>Home</li>
                     <li>Tv Shows</li>
                     <li>Movies</li>
                     <li>New & Popular</li>
-                    <li>My List</li>
+                    <li onClick={goToList}>My List</li>
                     <li>Browse by languages</li>
                 </ul>
             </div>

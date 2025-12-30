@@ -15,7 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider : React.FC<{children: React.ReactNode}> = ({children}) => {
     const [user,setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-
+    
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
@@ -24,17 +24,33 @@ export const AuthProvider : React.FC<{children: React.ReactNode}> = ({children})
         return unsubscribe;
     },[]);
 
-    const loginUser = async(email:string, password:string) => {
-        await login(email,password);
-    }
+    const loginUser = async (email: string, password: string) => {
+  setLoading(true);
+  try {
+    await login(email, password);
+  } finally {
+    setLoading(false);
+  }
+};
 
-    const signupUser = async(name:string, email:string, password:string) => {
-        await signup(name,email,password);
-    }
+const signupUser = async (name: string, email: string, password: string) => {
+  setLoading(true);
+  try {
+    await signup(name, email, password);
+  } finally {
+    setLoading(false);
+  }
+};
 
-    const logoutUser = async() => {
-        await logout();
-    }
+const logoutUser = async () => {
+  setLoading(true);
+  try {
+    await logout();
+  } finally {
+    setLoading(false);
+  }
+};
+
 
     return(
         <AuthContext.Provider value={{user,loading,loginUser,signupUser,logoutUser}}>

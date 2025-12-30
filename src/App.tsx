@@ -1,36 +1,52 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
-import { Routes,Route, useNavigate } from 'react-router-dom';
 import Login from './pages/Login/Login';
 import Player from './pages/Player/Player';
-import { onAuthStateChanged } from 'firebase/auth';
-import {auth} from './firbase';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from './context/AuthContext';
+import netflix_spinner from './assets/netflix_spinner.gif';
+import MovieDetails from './pages/MovieDetail/MovieDetail';
+import MyList from './pages/MyList/MyList';
 
-const App : React.FC = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    onAuthStateChanged(auth, async(user) => {
-      if(user){
-        console.log("Logged In");
-        navigate('/');
-      }else{
-        console.log("Logged Out");
-        navigate('/login');
-      }
-    })
-  },[])
+const App: React.FC = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="global-spinner">
+        <img src={netflix_spinner} alt="loading" />
+      </div>
+    );
+  }
+
   return (
     <div>
-      <ToastContainer theme = 'dark'/>
+      <ToastContainer theme="dark" />
       <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/login' element={<Login/>}/>
-        <Route path='/player/:id' element={<Player/>}/>
+        <Route
+          path="/"
+          element={user ? <Home /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/login"
+          element={!user ? <Login /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/movie/:id" 
+          element={user? <MovieDetails/> : <Navigate to="/login"/>}
+        />
+        <Route
+          path="/player/:id"
+          element={user ? <Player /> : <Navigate to="/login" />}
+        />
+        <Route
+         path="/my-list"
+         element={user ? <MyList/> : <Navigate to="/login"/>}/>
       </Routes>
     </div>
-  )
-}
+  );
+};
 
 export default App;
