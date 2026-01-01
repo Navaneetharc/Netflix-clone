@@ -13,38 +13,48 @@ import MyList from './pages/MyList/MyList';
 const App: React.FC = () => {
   const { user, loading } = useAuth();
 
-  if (loading) {
-    return (
-      <div className="global-spinner">
-        <img src={netflix_spinner} alt="loading" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="global-spinner">
+  //       <img src={netflix_spinner} alt="loading" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
       <ToastContainer theme="dark" />
-      <Routes>
-        <Route
-          path="/"
-          element={user ? <Home /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/login"
-          element={!user ? <Login /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/movie/:id" 
-          element={user? <MovieDetails/> : <Navigate to="/login"/>}
-        />
-        <Route
-          path="/player/:id"
-          element={user ? <Player /> : <Navigate to="/login" />}
-        />
-        <Route
-         path="/my-list"
-         element={user ? <MyList/> : <Navigate to="/login"/>}/>
-      </Routes>
+      
+      {loading && (
+        <div className="global-spinner">
+          <img src={netflix_spinner} alt="loading" />
+        </div>
+      )}
+
+      {!loading && (
+        <Routes>
+          <Route
+            path="/"
+            element={user ? <Home /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/login"
+            element={!user ? <Login /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/movie/:id" 
+            element={user ? <MovieDetails/> : <Navigate to="/login"/>}
+          />
+          <Route
+            path="/player/:id"
+            element={user ? <Player /> : <Navigate to="/login" />}
+          />
+          <Route
+           path="/my-list"
+           element={user ? <MyList/> : <Navigate to="/login"/>}
+          />
+        </Routes>
+      )}
     </div>
   );
 };
